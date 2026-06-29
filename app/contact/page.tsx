@@ -116,7 +116,7 @@ export default function ContactIntakeFlow() {
   // Animation Variants
   const slideVariants = {
     hidden: (direction: number) => ({ x: direction > 0 ? 50 : -50, opacity: 0 }),
-    visible: { x: 0, opacity: 1, transition: { type: 'spring', stiffness: 300, damping: 30 } },
+    visible: { x: 0, opacity: 1, transition: { type: "spring" as const, stiffness: 300, damping: 30 } },
     exit: (direction: number) => ({ x: direction > 0 ? -50 : 50, opacity: 0, transition: { duration: 0.2 } })
   }
 
