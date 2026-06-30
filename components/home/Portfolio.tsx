@@ -69,7 +69,7 @@ const MasterClassInterface = () => {
                     <div><span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${prop.status === 'Hot' ? 'bg-orange-500/10 text-orange-400' : 'bg-gray-500/10 text-gray-400'}`}>{prop.status}</span></div>
                     <div className="flex justify-end">
                       <button onClick={() => handleUnlock(prop.id)} className={`px-2 py-1.5 rounded-md flex items-center gap-1.5 transition-all text-[9px] font-bold ${unlocked[prop.id] ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30" : "bg-blue-600 text-white hover:bg-blue-500"}`}>
-                        {unlocked[prop.id] ? <><Unlock size={10}/> OPEN</> : <><Key size={10}/> -10 CR</>}
+                        {unlocked[prop.id] ? <><Unlock size={10}/> OPEN</> : <><Key size={10}/> SUB</>}
                       </button>
                     </div>
                   </div>
@@ -119,7 +119,7 @@ const MasterClassInterface = () => {
   );
 };
 
-// --- Crystal Ecosystem ---
+// --- Crystal Hospital Ecosystem ---
 const CrystalInterface = () => {
   const [activeRegimen, setActiveRegimen] = useState<'morning'|'night'>('morning');
   const [cardView, setCardView] = useState<'overview'|'details'>('overview');
@@ -130,7 +130,7 @@ const CrystalInterface = () => {
       <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-teal-600/10 blur-[80px] rounded-full pointer-events-none" />
 
       <div className="h-12 border-b border-white/5 flex items-center justify-between px-6 z-10 bg-black/20">
-        <span className="font-bold text-white text-xs tracking-widest uppercase flex items-center gap-2"><Activity size={12} className="text-emerald-400"/> Diagnostic Engine</span>
+        <span className="font-bold text-white text-xs tracking-widest uppercase flex items-center gap-2"><Activity size={12} className="text-emerald-400"/> HMS Diagnostic Engine</span>
         <div className="flex gap-1 bg-black/40 p-1 rounded-lg border border-white/5">
           <button onClick={() => {setActiveRegimen('morning'); setCardView('overview');}} className={`px-3 py-1 text-[10px] font-bold rounded transition-colors flex items-center gap-1 ${activeRegimen === 'morning' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'text-gray-500 hover:text-gray-300 border border-transparent'}`}><Sun size={10}/> AM</button>
           <button onClick={() => {setActiveRegimen('night'); setCardView('overview');}} className={`px-3 py-1 text-[10px] font-bold rounded transition-colors flex items-center gap-1 ${activeRegimen === 'night' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' : 'text-gray-500 hover:text-gray-300 border border-transparent'}`}><Moon size={10}/> PM</button>
@@ -191,7 +191,7 @@ const CrystalInterface = () => {
                 </div>
               </div>
               <button className={`w-full py-2 rounded text-[10px] font-bold flex items-center justify-center gap-1.5 transition-colors relative z-10 mt-3 ${activeRegimen === 'morning' ? 'bg-emerald-500 text-black hover:bg-emerald-400' : 'bg-indigo-500 text-white hover:bg-indigo-400'}`}>
-                <ShoppingBag size={12}/> ADD TO REGIMEN
+                <Activity size={12}/> SYNC WITH HMS
               </button>
             </motion.div>
           </AnimatePresence>
@@ -369,6 +369,7 @@ type PortfolioProject = {
   metrics: { label: string; value: string; icon: React.ReactNode }[];
   ui: React.ReactNode; glow: string; borderHover: string; buttonColor: string;
   problem: string; solution: string;
+  link?: string;
   nodes: ArchitectureNode[]; paths: ArchitecturePath[];
 }
 
@@ -376,7 +377,8 @@ type PortfolioProject = {
 const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   {
     id: "masterclass", title: "MasterClass", type: "Platform Architecture",
-    description: "We stripped away renter friction with a zero-login browsing experience, while building an ironclad, ledger-based portal for agents.",
+    description: "Prioritizing complete market transparency, we stripped away renter friction with a zero-login browsing experience, while deploying a secure, subscription-based ledger portal for verified agents.",
+    link: "https://www.masterclass.com/",
     tech: ["Next.js", "Edge Caching", "JWT Auth", "PostgreSQL", "Redis"],
     metrics: [
       { label: "Verified Agents", value: "100%", icon: <ShieldCheck size={14} className="text-blue-400" /> },
@@ -384,7 +386,7 @@ const PORTFOLIO_PROJECTS: PortfolioProject[] = [
     ],
     ui: <MasterClassInterface />, glow: "from-blue-500/20 to-indigo-500/20", borderHover: "hover:border-blue-500/30", buttonColor: "bg-blue-600/10 text-blue-400 hover:bg-blue-600 hover:text-white",
     problem: "Standard real estate platforms force renters into mandatory logins and bloated map searches, causing massive drop-offs before a viewing is ever booked.",
-    solution: "We engineered a headless architecture. Renters browse instantly via edge-cached nodes. Agents operate on a deeply secure, ledger-based backend that updates property states in real-time.",
+    solution: "We engineered a headless architecture emphasizing transparency. Renters browse instantly via edge-cached nodes, while agents operate on a deeply secure, subscription-based ledger backend that updates property states in real-time.",
     nodes: [
       { id: 'ui', label: 'Client UI', icon: <Globe size={16}/>, x: 100, y: 250, color: '#3b82f6' },
       { id: 'cdn', label: 'Edge Router', icon: <Network size={16}/>, x: 250, y: 250, color: '#6366f1' },
@@ -405,22 +407,22 @@ const PORTFOLIO_PROJECTS: PortfolioProject[] = [
     ]
   },
   {
-    id: "crystal", title: "Crystal", type: "Brand & E-Commerce",
-    description: "A multi-vertical wellness ecosystem disguised as a sleek e-commerce platform. State-driven diagnostic funnels guide users from symptom to personalized regimen in seconds.",
-    tech: ["React", "State Logic", "Stripe API", "Webhooks"],
+    id: "crystal", title: "Crystal Hospital", type: "Health & E-Commerce",
+    description: "A robust wellness ecosystem fully integrated with core Health Management System (HMS) software. State-driven diagnostic funnels guide patients from symptom to personalized regimen instantly.",
+    tech: ["React", "State Logic", "Stripe API", "Webhooks", "HMS Logic"],
     metrics: [
       { label: "Journey Flow", value: "Seamless", icon: <Zap size={14} className="text-emerald-400" /> },
       { label: "Data Routing", value: "Instant", icon: <Layers size={14} className="text-emerald-400" /> }
     ],
     ui: <CrystalInterface />, glow: "from-emerald-500/20 to-teal-500/20", borderHover: "hover:border-emerald-500/30", buttonColor: "bg-emerald-600/10 text-emerald-400 hover:bg-emerald-600 hover:text-white",
     problem: "Multi-vertical wellness brands suffer from fragmented user journeys. Users get lost trying to find the right regimen, leading to high cart abandonment.",
-    solution: "We built a state-driven diagnostic funnel that dynamically updates based on user input (AM/PM). Data routes instantly through the checkout pipeline for a frictionless conversion.",
+    solution: "Instead of a standalone site, we deployed a custom frontend fully integrated with HMS software. A state-driven diagnostic funnel dynamically updates based on user input, routing data instantly through the checkout pipeline.",
     nodes: [
       { id: 'funnel', label: 'Diagnostic UI', icon: <Globe size={16}/>, x: 100, y: 250, color: '#10b981' },
       { id: 'engine', label: 'State Engine', icon: <Activity size={16}/>, x: 300, y: 250, color: '#14b8a6' },
       { id: 'pay', label: 'Payment API', icon: <CreditCard size={16}/>, x: 500, y: 150, color: '#0ea5e9' },
       { id: 'db', label: 'Regimen DB', icon: <Database size={16}/>, x: 500, y: 350, color: '#8b5cf6' },
-      { id: 'webhook', label: 'Fulfillment Hook', icon: <Network size={16}/>, x: 700, y: 150, color: '#f59e0b' },
+      { id: 'webhook', label: 'HMS Fulfillment', icon: <Network size={16}/>, x: 700, y: 150, color: '#f59e0b' },
     ],
     paths: [
       { d: "M 124 250 L 276 250", color: "#14b8a6", animated: true },
@@ -430,31 +432,9 @@ const PORTFOLIO_PROJECTS: PortfolioProject[] = [
     ]
   },
   {
-    id: "apex", title: "Apex Auto Dealership", type: "Web Application",
-    description: "A digital showroom engineered for visual dominance. We utilized edge routing and aggressive caching to deliver high-resolution media instantly, driving immediate lead capture.",
-    tech: ["Next.js", "Edge Cache", "Global CDN", "CRM Sync"],
-    metrics: [
-      { label: "Performance", value: "98/100", icon: <Zap size={14} className="text-orange-400" /> },
-      { label: "Lead Capture", value: "< 1s", icon: <Users size={14} className="text-orange-400" /> }
-    ],
-    ui: <AutoInterface />, glow: "from-orange-500/20 to-amber-500/20", borderHover: "hover:border-orange-500/30", buttonColor: "bg-orange-600/10 text-orange-400 hover:bg-orange-600 hover:text-white",
-    problem: "Showcasing high-fidelity vehicle renders traditionally causes severe website bloat. Slow load times kill impulse purchases and lead capture.",
-    solution: "We utilized a global CDN and edge routing to preload 4K assets. The configurator runs entirely client-side, ensuring sub-second response times when swapping trims and colors.",
-    nodes: [
-      { id: 'cdn', label: 'Global CDN', icon: <Server size={16}/>, x: 100, y: 150, color: '#f97316' },
-      { id: 'ui', label: 'Configurator', icon: <Globe size={16}/>, x: 100, y: 350, color: '#f97316' },
-      { id: 'router', label: 'Edge Router', icon: <Activity size={16}/>, x: 350, y: 250, color: '#eab308' },
-      { id: 'crm', label: 'Dealer CRM', icon: <Users size={16}/>, x: 600, y: 250, color: '#3b82f6' },
-    ],
-    paths: [
-      { d: "M 124 150 Q 240 150 328 235", color: "#eab308", animated: true },
-      { d: "M 124 350 Q 240 350 328 265", color: "#f97316", animated: false },
-      { d: "M 374 250 L 576 250", color: "#3b82f6", animated: true },
-    ]
-  },
-  {
     id: "minimart", title: "Mini Mart ERP", type: "Business Automation",
     description: "The operational brain of physical retail. A unified dashboard that marries a live POS terminal with real-time inventory deduction and automated accounting logic.",
+    link: "https://www.vinkomtech.com/",
     tech: ["Live Event Bus", "Webhooks", "Custom POS API", "Financial Ledger"],
     metrics: [
       { label: "Data Sync", value: "Real-time", icon: <Database size={14} className="text-purple-400" /> },
@@ -479,6 +459,29 @@ const PORTFOLIO_PROJECTS: PortfolioProject[] = [
       { d: "M 320 265 Q 400 350 476 350", color: "#ec4899", animated: true, speed: 0.8 },
       { d: "M 524 150 L 676 150", color: "#10b981", animated: true },
       { d: "M 524 350 L 676 350", color: "#3b82f6", animated: true },
+    ]
+  },
+  {
+    id: "apex", title: "Apex Auto Dealership", type: "Web Application",
+    description: "A digital showroom engineered for visual dominance. We utilized edge routing and aggressive caching to deliver high-resolution media instantly, driving immediate lead capture.",
+    tech: ["Next.js", "Edge Cache", "Global CDN", "CRM Sync"],
+    metrics: [
+      { label: "Performance", value: "98/100", icon: <Zap size={14} className="text-orange-400" /> },
+      { label: "Lead Capture", value: "< 1s", icon: <Users size={14} className="text-orange-400" /> }
+    ],
+    ui: <AutoInterface />, glow: "from-orange-500/20 to-amber-500/20", borderHover: "hover:border-orange-500/30", buttonColor: "bg-orange-600/10 text-orange-400 hover:bg-orange-600 hover:text-white",
+    problem: "Showcasing high-fidelity vehicle renders traditionally causes severe website bloat. Slow load times kill impulse purchases and lead capture.",
+    solution: "We utilized a global CDN and edge routing to preload 4K assets. The configurator runs entirely client-side, ensuring sub-second response times when swapping trims and colors.",
+    nodes: [
+      { id: 'cdn', label: 'Global CDN', icon: <Server size={16}/>, x: 100, y: 150, color: '#f97316' },
+      { id: 'ui', label: 'Configurator', icon: <Globe size={16}/>, x: 100, y: 350, color: '#f97316' },
+      { id: 'router', label: 'Edge Router', icon: <Activity size={16}/>, x: 350, y: 250, color: '#eab308' },
+      { id: 'crm', label: 'Dealer CRM', icon: <Users size={16}/>, x: 600, y: 250, color: '#3b82f6' },
+    ],
+    paths: [
+      { d: "M 124 150 Q 240 150 328 235", color: "#eab308", animated: true },
+      { d: "M 124 350 Q 240 350 328 265", color: "#f97316", animated: false },
+      { d: "M 374 250 L 576 250", color: "#3b82f6", animated: true },
     ]
   }
 ]
@@ -517,7 +520,20 @@ function ArchitectureModal({ project, onClose }: { project: PortfolioProject, on
             <div className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">Architecture Brief</div>
           </div>
           
-          <h3 className="text-3xl font-bold text-white mb-8 tracking-tight">{project.title}</h3>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <h3 className="text-3xl font-bold text-white tracking-tight">{project.title}</h3>
+            
+            {project.link && project.link !== "#" && (
+              <a 
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`w-max px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2 ${project.buttonColor}`}
+              >
+                Launch Live <ArrowUpRight size={14} />
+              </a>
+            )}
+          </div>
           
           <div className="mb-8 relative">
             <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-red-500/50 rounded-full"></div>

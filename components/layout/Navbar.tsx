@@ -7,8 +7,8 @@ import { Menu, X, Code2 } from 'lucide-react'
 
 // Map the display name to the exact section ID
 const NAV_ITEMS = [
-  { name: 'Process', id: 'process' },
   { name: 'Services', id: 'services' },
+  { name: 'Process', id: 'process' },
   { name: 'Work', id: 'portfolio' }, 
   { name: 'Company', id: 'company' },
 ]

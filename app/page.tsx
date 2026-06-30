@@ -1,10 +1,10 @@
 import Hero from '@/components/home/Hero'
 import Trust from '@/components/home/Trust'
 import Problem from '@/components/home/Problem'
+import Services from '@/components/home/Services'  // <-- Moved up
 import Process from '@/components/home/Process'
-import Portfolio from '@/components/home/Portfolio'
+import Portfolio from '@/components/home/Portfolio' // <-- Moved down
 import Company from '@/components/home/Company'
-import Services from '@/components/home/Services'
 import Cta from '@/components/home/Cta'
 
 export default function Home() {
@@ -13,10 +13,10 @@ export default function Home() {
       <Hero />
       <Trust />
       <Problem />
+      <Services /> 
       <Process />
-      <Portfolio />
+      <Portfolio /> 
       <Company />
-      <Services />
       <Cta />
     </main>
   )
