@@ -9,29 +9,35 @@ export default function BookReview() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
 
+  // --- SECURE API INTEGRATION ---
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Extract form data
-    const formData = new FormData(e.currentTarget)
+    // Convert FormData to a standard JSON object
+    const formElement = e.currentTarget
+    const formData = new FormData(formElement)
+    const data = Object.fromEntries(formData.entries())
 
     try {
-      // ==============================================================================
-      // FORMSUBMIT AJAX ROUTING LOGIC (selertson@gmail.com)
-      // ==============================================================================
-      const response = await fetch("https://formsubmit.co/ajax/selertson@gmail.com", {
+      // Call our secure internal API
+      const response = await fetch("/api/contact", {
         method: "POST",
-        body: formData,
-        headers: {
-          'Accept': 'application/json' // Ensures FormSubmit returns JSON, not an HTML page
-        }
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          _subject: "New Architecture Review Request",
+          Name: data.name,
+          Email: data.email,
+          Company: data.company,
+          Tech_Stack: data.stack,
+          Primary_Bottleneck: data.message
+        })
       })
 
       if (response.ok) {
         setIsSuccess(true)
       } else {
-        console.error("Submission failed. Server responded with an error.")
+        console.error("Submission failed at API level")
       }
     } catch (error) {
       console.error("Network or submission error:", error)
@@ -121,11 +127,7 @@ export default function BookReview() {
                 
                 {/* FORMSUBMIT CONFIGURATION FIELDS */}
                 {/* Email Subject Line */}
-                <input type="hidden" name="_subject" value="New Architecture Review Request" />
-                {/* Disable Captcha to maintain seamless UI */}
-                <input type="hidden" name="_captcha" value="false" />
-                {/* Set email format to clean table */}
-                <input type="hidden" name="_template" value="table" />
+                
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Name Input */}
