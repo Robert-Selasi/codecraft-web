@@ -48,7 +48,7 @@ const AutomationVisual = () => (
   </svg>
 )
 
-// Commerce (Unchanged)
+// Commerce (FIXED: Converted cy to y transform)
 const CommerceVisual = () => (
   <svg className="absolute inset-0 w-full h-full opacity-10 group-hover:opacity-30 transition-opacity duration-700" viewBox="0 0 400 300">
     <motion.path d="M0 200 L 100 150 L 200 180 L 300 80 L 400 100" stroke="#10b981" strokeWidth="2" fill="none" />
@@ -59,22 +59,27 @@ const CommerceVisual = () => (
         <stop offset="100%" stopColor="transparent" />
       </linearGradient>
     </defs>
-    <motion.circle cx="300" cy="80" r="6" fill="#10b981" animate={{ y: [0, -10, 0] }} transition={{ duration: 2, repeat: Infinity }} />
+    <motion.circle 
+      cx="0" cy="0" r="6" fill="#10b981" 
+      initial={{ x: 300, y: 80 }} 
+      animate={{ y: [80, 70, 80] }} 
+      transition={{ duration: 2, repeat: Infinity }} 
+    />
   </svg>
 )
 
-// NEW: Central Hub Sync for "System Integration"
+// System Integration (FIXED: Converted all cx/cy to x/y transforms)
 const IntegrationVisual = () => (
   <svg className="absolute inset-0 w-full h-full opacity-10 group-hover:opacity-40 transition-opacity duration-700" viewBox="0 0 400 300">
     <g transform="translate(0, 10)">
       {/* Sync Lines from Outer Apps to Center Hub */}
       <path d="M 80 80 L 200 150 M 320 80 L 200 150 M 80 220 L 200 150 M 320 220 L 200 150" stroke="#f97316" strokeWidth="1.5" strokeDasharray="4 6" fill="none" opacity="0.4" />
       
-      {/* Flowing Data Packets (Dots moving towards the center) */}
-      <motion.circle r="3" fill="#f97316" animate={{ cx: [80, 200], cy: [80, 150], opacity: [0, 1, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }} />
-      <motion.circle r="3" fill="#f97316" animate={{ cx: [320, 200], cy: [80, 150], opacity: [0, 1, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: 0.5 }} />
-      <motion.circle r="3" fill="#f97316" animate={{ cx: [80, 200], cy: [220, 150], opacity: [0, 1, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: "linear", delay: 1 }} />
-      <motion.circle r="3" fill="#f97316" animate={{ cx: [320, 200], cy: [220, 150], opacity: [0, 1, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: "linear", delay: 0.2 }} />
+      {/* Flowing Data Packets (Dots moving towards the center using CSS transforms) */}
+      <motion.circle cx="0" cy="0" r="3" fill="#f97316" initial={{ x: 80, y: 80, opacity: 0 }} animate={{ x: [80, 200], y: [80, 150], opacity: [0, 1, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }} />
+      <motion.circle cx="0" cy="0" r="3" fill="#f97316" initial={{ x: 320, y: 80, opacity: 0 }} animate={{ x: [320, 200], y: [80, 150], opacity: [0, 1, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: 0.5 }} />
+      <motion.circle cx="0" cy="0" r="3" fill="#f97316" initial={{ x: 80, y: 220, opacity: 0 }} animate={{ x: [80, 200], y: [220, 150], opacity: [0, 1, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: "linear", delay: 1 }} />
+      <motion.circle cx="0" cy="0" r="3" fill="#f97316" initial={{ x: 320, y: 220, opacity: 0 }} animate={{ x: [320, 200], y: [220, 150], opacity: [0, 1, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: "linear", delay: 0.2 }} />
 
       {/* Outer App Nodes */}
       <circle cx="80" cy="80" r="12" fill="#080c17" stroke="#f97316" strokeWidth="2" />
@@ -82,8 +87,8 @@ const IntegrationVisual = () => (
       <circle cx="80" cy="220" r="12" fill="#080c17" stroke="#f97316" strokeWidth="2" />
       <circle cx="320" cy="220" r="12" fill="#080c17" stroke="#f97316" strokeWidth="2" />
       
-      {/* Central Unified Hub */}
-      <motion.circle cx="200" cy="150" r="22" fill="#f97316" opacity="0.15" animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }} />
+      {/* Central Unified Hub (Fixed Transform Origin Bug) */}
+      <motion.circle cx="0" cy="0" r="22" fill="#f97316" opacity="0.15" initial={{ x: 200, y: 150 }} animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }} />
       <circle cx="200" cy="150" r="22" fill="#080c17" stroke="#f97316" strokeWidth="2.5" />
       <circle cx="200" cy="150" r="8" fill="#f97316" />
     </g>
@@ -171,7 +176,7 @@ export default function Services() {
 
       <div className="container mx-auto px-6 relative z-10">
         
-        {/* Header Section (Rewritten for Laymen) */}
+        {/* Header Section */}
         <div className="max-w-3xl mb-16 md:mb-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

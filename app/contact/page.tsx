@@ -52,9 +52,29 @@ export default function ContactIntakeFlow() {
     details: ''
   })
 
+  // ============================================================================
+  // VALIDATION LOGIC (NEW)
+  // ============================================================================
+  const isStepValid = () => {
+    switch (step) {
+      case 1:
+        return formData.intent !== ''
+      case 2:
+        return formData.budget !== '' && formData.timeline !== ''
+      case 3:
+        // Ensures Name, Email, and Company are filled and not just empty spaces
+        return formData.name.trim() !== '' && 
+               formData.email.trim() !== '' && 
+               formData.email.includes('@') && // Basic email check
+               formData.company.trim() !== ''
+      default:
+        return true
+    }
+  }
+
   // Navigation Handlers
   const nextStep = () => {
-    if (step < 4) {
+    if (step < 4 && isStepValid()) {
       setDirection(1)
       setStep(prev => prev + 1)
     }
@@ -71,13 +91,20 @@ export default function ContactIntakeFlow() {
     setFormData(prev => ({ ...prev, [key]: value }))
     // Auto-advance on single-click selections for step 1
     if (key === 'intent') {
-      setTimeout(nextStep, 300) 
+      setTimeout(() => {
+        setDirection(1)
+        setStep(2)
+      }, 350) 
     }
   }
 
   // --- LIVE EMAIL INTEGRATION ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Final check before submission
+    if (formData.details.trim() === '') return
+    
     setIsSubmitting(true)
     
     try {
@@ -103,7 +130,6 @@ export default function ContactIntakeFlow() {
         setIsSuccess(true)
       } else {
         console.error("Submission failed")
-        // If it fails, we still show success for UX, but log it.
         setIsSuccess(true) 
       }
     } catch (error) {
@@ -166,7 +192,7 @@ export default function ContactIntakeFlow() {
               
               {/* STEP 1: INTENT */}
               {step === 1 && !isSuccess && (
-                <motion.div key="step1" custom={direction} variants={slideVariants} initial="hidden" animate="visible" exit="exit" className="absolute inset-0 w-full">
+                <motion.div key="step1" custom={direction} variants={slideVariants} initial="hidden" animate="visible" exit="exit" className="w-full">
                   <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">What brings you to CodeCraft?</h2>
                   <p className="text-gray-400 mb-8 md:text-lg">Select the primary focus of your project so we can prepare the right architecture.</p>
                   
@@ -198,14 +224,14 @@ export default function ContactIntakeFlow() {
 
               {/* STEP 2: SCOPE & TIMELINE */}
               {step === 2 && !isSuccess && (
-                <motion.div key="step2" custom={direction} variants={slideVariants} initial="hidden" animate="visible" exit="exit" className="absolute inset-0 w-full">
+                <motion.div key="step2" custom={direction} variants={slideVariants} initial="hidden" animate="visible" exit="exit" className="w-full">
                   <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">Project Scope & Timing.</h2>
                   <p className="text-gray-400 mb-8 md:text-lg">This helps us allocate the right engineering resources for your build.</p>
                   
                   <div className="space-y-8">
                     {/* Budget Selection */}
                     <div>
-                      <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Estimated Budget</h3>
+                      <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Estimated Budget <span className="text-red-500">*</span></h3>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         {BUDGET_RANGES.map((range) => (
                           <button
@@ -225,7 +251,7 @@ export default function ContactIntakeFlow() {
 
                     {/* Timeline Selection */}
                     <div>
-                      <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Target Launch</h3>
+                      <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Target Launch <span className="text-red-500">*</span></h3>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         {TIMELINES.map((time) => (
                           <button
@@ -246,29 +272,26 @@ export default function ContactIntakeFlow() {
                 </motion.div>
               )}
 
-              {/* STEP 3: THE DETAILS (Z-INDEX BUG FIXED) */}
+              {/* STEP 3: THE DETAILS */}
               {step === 3 && !isSuccess && (
-                <motion.div key="step3" custom={direction} variants={slideVariants} initial="hidden" animate="visible" exit="exit" className="absolute inset-0 w-full">
+                <motion.div key="step3" custom={direction} variants={slideVariants} initial="hidden" animate="visible" exit="exit" className="w-full">
                   <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">Let's get the details.</h2>
                   <p className="text-gray-400 mb-8 md:text-lg">Who are we speaking with, and what brand are we representing?</p>
                   
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="relative w-full">
-                        {/* Fixed: Added z-10 and pointer-events-none */}
                         <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none" />
-                        <input type="text" placeholder="Your Name" value={formData.name} onChange={(e) => updateForm('name', e.target.value)} className="w-full bg-[#0a0f1c]/80 backdrop-blur-sm border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-blue-500 focus:bg-blue-500/5 transition-all shadow-inner relative z-0" />
+                        <input type="text" placeholder="Your Name *" value={formData.name} onChange={(e) => updateForm('name', e.target.value)} className="w-full bg-[#0a0f1c]/80 backdrop-blur-sm border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-blue-500 focus:bg-blue-500/5 transition-all shadow-inner relative z-0" />
                       </div>
                       <div className="relative w-full">
-                        {/* Fixed: Added z-10 and pointer-events-none */}
                         <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none" />
-                        <input type="email" placeholder="Email Address" value={formData.email} onChange={(e) => updateForm('email', e.target.value)} className="w-full bg-[#0a0f1c]/80 backdrop-blur-sm border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-blue-500 focus:bg-blue-500/5 transition-all shadow-inner relative z-0" />
+                        <input type="email" placeholder="Email Address *" value={formData.email} onChange={(e) => updateForm('email', e.target.value)} className="w-full bg-[#0a0f1c]/80 backdrop-blur-sm border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-blue-500 focus:bg-blue-500/5 transition-all shadow-inner relative z-0" />
                       </div>
                     </div>
                     <div className="relative w-full">
-                      {/* Fixed: Added z-10 and pointer-events-none */}
                       <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none" />
-                      <input type="text" placeholder="Company Name" value={formData.company} onChange={(e) => updateForm('company', e.target.value)} className="w-full bg-[#0a0f1c]/80 backdrop-blur-sm border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-blue-500 focus:bg-blue-500/5 transition-all shadow-inner relative z-0" />
+                      <input type="text" placeholder="Company Name *" value={formData.company} onChange={(e) => updateForm('company', e.target.value)} className="w-full bg-[#0a0f1c]/80 backdrop-blur-sm border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-blue-500 focus:bg-blue-500/5 transition-all shadow-inner relative z-0" />
                     </div>
                   </div>
                 </motion.div>
@@ -276,15 +299,14 @@ export default function ContactIntakeFlow() {
 
               {/* STEP 4: REVIEW & SUBMIT */}
               {step === 4 && !isSuccess && (
-                <motion.div key="step4" custom={direction} variants={slideVariants} initial="hidden" animate="visible" exit="exit" className="absolute inset-0 w-full flex flex-col">
+                <motion.div key="step4" custom={direction} variants={slideVariants} initial="hidden" animate="visible" exit="exit" className="w-full flex flex-col">
                   <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">Ready to initiate?</h2>
                   <p className="text-gray-400 mb-8 md:text-lg">Give us a brief overview of the project. Don't worry about being perfect; we'll hash out the architecture on our first call.</p>
                   
                   <div className="relative h-48 mb-6 w-full">
-                    {/* Fixed: Added z-10 and pointer-events-none */}
                     <MessageSquare size={16} className="absolute left-4 top-5 text-gray-400 z-10 pointer-events-none" />
                     <textarea 
-                      placeholder="Tell us about the operational bottleneck or platform you want to build..." 
+                      placeholder="Tell us about the operational bottleneck or platform you want to build... *" 
                       value={formData.details} 
                       onChange={(e) => updateForm('details', e.target.value)}
                       className="w-full h-full bg-[#0a0f1c]/80 backdrop-blur-sm border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-blue-500 focus:bg-blue-500/5 transition-all resize-none shadow-inner relative z-0" 
@@ -293,8 +315,8 @@ export default function ContactIntakeFlow() {
 
                   <button 
                     onClick={handleSubmit}
-                    disabled={isSubmitting}
-                    className="w-full mt-auto py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_30px_rgba(59,130,246,0.3)]"
+                    disabled={isSubmitting || formData.details.trim() === ''}
+                    className="w-full mt-4 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600 shadow-[0_0_30px_rgba(59,130,246,0.3)]"
                   >
                     {isSubmitting ? (
                       <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
@@ -307,7 +329,7 @@ export default function ContactIntakeFlow() {
 
               {/* SUCCESS STATE */}
               {isSuccess && (
-                <motion.div key="success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="absolute inset-0 w-full flex flex-col items-center justify-center text-center">
+                <motion.div key="success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="w-full py-10 flex flex-col items-center justify-center text-center">
                   <div className="w-24 h-24 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mb-8 shadow-[0_0_50px_rgba(16,185,129,0.2)]">
                     <CheckCircle2 size={48} className="text-emerald-400" />
                   </div>
@@ -326,7 +348,7 @@ export default function ContactIntakeFlow() {
 
           {/* Footer Navigation */}
           {!isSuccess && (
-            <div className="mt-12 flex justify-between items-center pt-6 border-t border-white/5 w-full">
+            <div className="mt-8 md:mt-12 flex justify-between items-center pt-6 border-t border-white/5 w-full">
               <button 
                 onClick={prevStep}
                 className={`flex items-center gap-2 text-sm font-bold transition-all ${step === 1 ? 'opacity-0 pointer-events-none' : 'text-gray-400 hover:text-white'}`}
@@ -337,7 +359,12 @@ export default function ContactIntakeFlow() {
               {step < 4 && (
                 <button 
                   onClick={nextStep}
-                  className="flex items-center gap-2 px-8 py-3 bg-white text-black rounded-full text-sm font-bold hover:bg-gray-200 transition-all active:scale-95 shadow-lg"
+                  disabled={!isStepValid()}
+                  className={`flex items-center gap-2 px-8 py-3 rounded-full text-sm font-bold transition-all shadow-lg ${
+                    isStepValid()
+                      ? 'bg-white text-black hover:bg-gray-200 active:scale-95'
+                      : 'bg-white/10 text-gray-500 cursor-not-allowed border border-white/5'
+                  }`}
                 >
                   Continue <ArrowRight size={16} />
                 </button>
